@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS repl_courses (
 );
 
 INSERT INTO repl_courses (id, name, year)
-VALUES (0, "-", 0);
+VALUES (0, '-', 0);
 
 CREATE TABLE IF NOT EXISTS toolkits (
     id SMALLSERIAL PRIMARY KEY,
