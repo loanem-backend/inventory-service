@@ -14,13 +14,14 @@ func Start(s *grpc.Server, p *pgxpool.Pool) {
 
 	var (
 		instrumentRepo = repository.NewInstrumentRepository(queries)
+		toolkitRepo    = repository.NewToolkitRepository(queries)
 	)
 
 	var (
 		instrumentServ = service.NewInstrumentService(instrumentRepo)
+		toolkitServ    = service.NewToolkitService(toolkitRepo)
 	)
 
-	pbinventory.RegisterInventoryServiceServer(s, NewInventoryServer(
-		NewInstrumentServer(instrumentServ),
-	))
+	pbinventory.RegisterInstrumentServiceServer(s, NewInstrumentServer(instrumentServ))
+	pbinventory.RegisterToolkitServiceServer(s, NewToolkitServer(toolkitServ))
 }

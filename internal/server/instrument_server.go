@@ -9,6 +9,7 @@ import (
 )
 
 type InstrumentServer struct {
+	pbinventory.UnimplementedInstrumentServiceServer
 	serv service.InstrumentService
 }
 
