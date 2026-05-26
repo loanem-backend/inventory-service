@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS repl_courses (
+    id INT NOT NULL PRIMARY KEY,
+    name VARCHAR(63) NOT NULL,
+    year INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO repl_courses (id, name, year)
+VALUES (0, "-", 0);
+
+CREATE TABLE IF NOT EXISTS toolkits (
+    id SMALLSERIAL PRIMARY KEY,
+    kit_name VARCHAR(63) NOT NULL,
+    course_id INT DEFAULT 0 REFERENCES repl_courses(id) ON DELETE SET DEFAULT,
+    total_count INT NOT NULL,
+    out_of_order_count INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

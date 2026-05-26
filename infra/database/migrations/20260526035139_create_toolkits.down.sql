@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS toolkits;
+
+DROP TABLE IF EXISTS repl_courses;

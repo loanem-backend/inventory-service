@@ -16,36 +16,27 @@ services:
   #   networks:
   #     - backend-network
 
-  postgres:
-    image: postgres:15.6-alpine
-    container_name: postgres-db
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
-      POSTGRES_DB: ${DB_NAME}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - backend-network
+  # postgres:
+  #   image: postgres:15.6-alpine
+  #   container_name: postgres-db
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     POSTGRES_USER: ${DB_USER}
+  #     POSTGRES_PASSWORD: ${DB_PASS}
+  #     POSTGRES_DB: ${DB_NAME}
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - backend-network
 
   migrate:
     image: migrate/migrate
     profiles: ["manual"]
-    depends_on:
-      - postgres
-    entrypoint:
-      - "migrate"
-      - "-path"
-      - "/migrations"
-      - "-database"
-      - "postgres://${DB_USER}:${DB_PASS}@postgres:5432/${DB_NAME}?sslmode=disable"
+    entrypoint: ["migrate", "create", "-ext", "sql", "-dir", "/migrations"]
     volumes:
       - ./infra/database/migrations:/migrations
-    networks:
-      - backend-network
 
   sqlc:
     image: sqlc/sqlc:1.27.0

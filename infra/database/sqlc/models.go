@@ -14,3 +14,21 @@ type Instrument struct {
 	CreatedAt pgtype.Timestamp
 	UpdatedAt pgtype.Timestamp
 }
+
+type ReplCourse struct {
+	ID        int32
+	Name      string
+	Year      int32
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
+}
+
+type Toolkit struct {
+	ID              int16
+	KitName         string
+	CourseID        pgtype.Int4
+	TotalCount      int32
+	OutOfOrderCount int32
+	CreatedAt       pgtype.Timestamp
+	UpdatedAt       pgtype.Timestamp
+}
