@@ -2,7 +2,7 @@ module github.com/loanem-backend/inventory-service
 
 go 1.25.0
 
-require github.com/loanem-backend/protos v0.0.0-20260526063809-f8fcdc6321b7
+require github.com/loanem-backend/protos v0.0.0-20260603085735-faa9afd76d38
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
@@ -10,7 +10,7 @@ require (
 	github.com/jackc/pgx/v5 v5.9.2 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
-	github.com/loanem-backend/course-service v0.0.0-20260602172542-b9eebb955301 // indirect
+	github.com/loanem-backend/course-service v0.0.0-20260604083344-46ed4fd1a9e8 // indirect
 	github.com/rabbitmq/amqp091-go v1.11.0 // indirect
 	golang.org/x/net v0.51.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect

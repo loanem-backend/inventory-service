@@ -10,6 +10,7 @@ import (
 
 type CourseService interface {
 	Add(ctx context.Context, arg messaging.CourseEvent) error
+	Remove(ctx context.Context, arg messaging.CourseEvent) error
 }
 
 type courseService struct {
@@ -28,6 +29,14 @@ func (s *courseService) Add(ctx context.Context, arg messaging.CourseEvent) erro
 		Name: arg.CourseName,
 		Year: arg.CourseYear,
 	}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *courseService) Remove(ctx context.Context, arg messaging.CourseEvent) error {
+	if err := s.courseRepo.Delete(ctx, int32(arg.CourseID)); err != nil {
 		return err
 	}
 

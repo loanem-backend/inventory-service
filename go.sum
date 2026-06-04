@@ -23,6 +23,8 @@ github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
 github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 github.com/loanem-backend/course-service v0.0.0-20260602172542-b9eebb955301 h1:OVCDISkcUMkn5hAG2gQp3fd6HN51G0Wee7cwJFXeVDk=
 github.com/loanem-backend/course-service v0.0.0-20260602172542-b9eebb955301/go.mod h1:yHJmnPqk/NOUzhi0qbwuj0OVGK1lT5LH+0xS3yX3i7w=
+github.com/loanem-backend/course-service v0.0.0-20260604083344-46ed4fd1a9e8 h1:O7fWu2+vAnBHrIGKGuBUFdKLqqbI28dcH8Rj31SRGXY=
+github.com/loanem-backend/course-service v0.0.0-20260604083344-46ed4fd1a9e8/go.mod h1:6hdPJlc+OGfDXMo6nkXA8HVvbsFiqNgZrD2DVJXy5pM=
 github.com/loanem-backend/protos v0.0.0-20260514104859-b26dfbe727a4 h1:ZCw+NoCDcFRyFKmT0MogxLPHpLmTDf5LWito3QUIosk=
 github.com/loanem-backend/protos v0.0.0-20260514104859-b26dfbe727a4/go.mod h1:WeVOgyBItLRSJ1mgjcFcGWvvKgpTEoaYxCWHUtUr0fA=
 github.com/loanem-backend/protos v0.0.0-20260525081905-38bfbb9d7972 h1:8sCoQopIKbu5JyF6+CxbJQ5h6ygOcMf2gfJ4VK8KJdk=
@@ -33,6 +35,8 @@ github.com/loanem-backend/protos v0.0.0-20260526045120-f31df0a06340 h1:0cyuksaO4
 github.com/loanem-backend/protos v0.0.0-20260526045120-f31df0a06340/go.mod h1:WeVOgyBItLRSJ1mgjcFcGWvvKgpTEoaYxCWHUtUr0fA=
 github.com/loanem-backend/protos v0.0.0-20260526063809-f8fcdc6321b7 h1:lOeVmNqNzz2zhd/JaqQGwtDfE5/pqELHBDflC1PIr00=
 github.com/loanem-backend/protos v0.0.0-20260526063809-f8fcdc6321b7/go.mod h1:WeVOgyBItLRSJ1mgjcFcGWvvKgpTEoaYxCWHUtUr0fA=
+github.com/loanem-backend/protos v0.0.0-20260603085735-faa9afd76d38 h1:1u3xcKysVmisFqq7GPxfy8KaO+8hQCay4lb9ljkBvmE=
+github.com/loanem-backend/protos v0.0.0-20260603085735-faa9afd76d38/go.mod h1:WeVOgyBItLRSJ1mgjcFcGWvvKgpTEoaYxCWHUtUr0fA=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rabbitmq/amqp091-go v1.11.0 h1:HxIctVm9Gid/Vtn706necmZ7Wj6pgGI2eqplRbEY8O8=
 github.com/rabbitmq/amqp091-go v1.11.0/go.mod h1:Hy4jKW5kQART1u+JkDTF9YYOQUHXqMuhrgxOEeS7G4o=

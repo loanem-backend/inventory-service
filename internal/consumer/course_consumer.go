@@ -68,6 +68,8 @@ func (c *CourseConsumer) Start(ctx context.Context) error {
 			switch messaging.EventName(event.EventName) {
 			case messaging.EventNameCourseCreated:
 				e = c.serv.Add(ctx, event)
+			case messaging.EventNameCourseDeleted:
+				e = c.serv.Remove(ctx, event)
 			default:
 				log.Printf("Unrecognized event name: %s\n", event.EventName)
 				m.Ack(false)
