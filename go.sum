@@ -21,6 +21,8 @@ github.com/jackc/puddle/v2 v2.2.2 h1:PR8nw+E/1w0GLuRFSmiioY6UooMp6KJv0/61nB7icHo
 github.com/jackc/puddle/v2 v2.2.2/go.mod h1:vriiEXHvEE654aYKXXjOvZM39qJ0q+azkZFrfEOc3H4=
 github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
 github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
+github.com/loanem-backend/course-service v0.0.0-20260602172542-b9eebb955301 h1:OVCDISkcUMkn5hAG2gQp3fd6HN51G0Wee7cwJFXeVDk=
+github.com/loanem-backend/course-service v0.0.0-20260602172542-b9eebb955301/go.mod h1:yHJmnPqk/NOUzhi0qbwuj0OVGK1lT5LH+0xS3yX3i7w=
 github.com/loanem-backend/protos v0.0.0-20260514104859-b26dfbe727a4 h1:ZCw+NoCDcFRyFKmT0MogxLPHpLmTDf5LWito3QUIosk=
 github.com/loanem-backend/protos v0.0.0-20260514104859-b26dfbe727a4/go.mod h1:WeVOgyBItLRSJ1mgjcFcGWvvKgpTEoaYxCWHUtUr0fA=
 github.com/loanem-backend/protos v0.0.0-20260525081905-38bfbb9d7972 h1:8sCoQopIKbu5JyF6+CxbJQ5h6ygOcMf2gfJ4VK8KJdk=
@@ -32,6 +34,8 @@ github.com/loanem-backend/protos v0.0.0-20260526045120-f31df0a06340/go.mod h1:We
 github.com/loanem-backend/protos v0.0.0-20260526063809-f8fcdc6321b7 h1:lOeVmNqNzz2zhd/JaqQGwtDfE5/pqELHBDflC1PIr00=
 github.com/loanem-backend/protos v0.0.0-20260526063809-f8fcdc6321b7/go.mod h1:WeVOgyBItLRSJ1mgjcFcGWvvKgpTEoaYxCWHUtUr0fA=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/rabbitmq/amqp091-go v1.11.0 h1:HxIctVm9Gid/Vtn706necmZ7Wj6pgGI2eqplRbEY8O8=
+github.com/rabbitmq/amqp091-go v1.11.0/go.mod h1:Hy4jKW5kQART1u+JkDTF9YYOQUHXqMuhrgxOEeS7G4o=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
@@ -61,6 +65,8 @@ google.golang.org/genproto/googleapis/rpc v0.0.0-20260226221140-a57be14db171 h1:
 google.golang.org/genproto/googleapis/rpc v0.0.0-20260226221140-a57be14db171/go.mod h1:4Hqkh8ycfw05ld/3BWL7rJOSfebL2Q+DVDeRgYgxUU8=
 google.golang.org/grpc v1.81.0 h1:W3G9N3KQf3BU+YuCtGKJk0CmxQNbAISICD/9AORxLIw=
 google.golang.org/grpc v1.81.0/go.mod h1:xGH9GfzOyMTGIOXBJmXt+BX/V0kcdQbdcuwQ/zNw42I=
+google.golang.org/grpc v1.81.1 h1:VnnIIZ88UzOOKLukQi+ImGz8O1Wdp8nAGGnvOfEIWQQ=
+google.golang.org/grpc v1.81.1/go.mod h1:xGH9GfzOyMTGIOXBJmXt+BX/V0kcdQbdcuwQ/zNw42I=
 google.golang.org/protobuf v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=
 google.golang.org/protobuf v1.36.11/go.mod h1:HTf+CrKn2C3g5S8VImy6tdcUvCska2kB7j23XfzDpco=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
