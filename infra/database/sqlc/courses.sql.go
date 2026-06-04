@@ -11,6 +11,16 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const deleteCourseByID = `-- name: DeleteCourseByID :exec
+DELETE FROM repl_courses
+WHERE id = $1
+`
+
+func (q *Queries) DeleteCourseByID(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deleteCourseByID, id)
+	return err
+}
+
 const insertCourse = `-- name: InsertCourse :exec
 INSERT INTO repl_courses (id, name, year)
 VALUES ($1, $2, $3)
