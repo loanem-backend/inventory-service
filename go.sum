@@ -37,6 +37,10 @@ github.com/loanem-backend/protos v0.0.0-20260526063809-f8fcdc6321b7 h1:lOeVmNqNz
 github.com/loanem-backend/protos v0.0.0-20260526063809-f8fcdc6321b7/go.mod h1:WeVOgyBItLRSJ1mgjcFcGWvvKgpTEoaYxCWHUtUr0fA=
 github.com/loanem-backend/protos v0.0.0-20260603085735-faa9afd76d38 h1:1u3xcKysVmisFqq7GPxfy8KaO+8hQCay4lb9ljkBvmE=
 github.com/loanem-backend/protos v0.0.0-20260603085735-faa9afd76d38/go.mod h1:WeVOgyBItLRSJ1mgjcFcGWvvKgpTEoaYxCWHUtUr0fA=
+github.com/loanem-backend/protos v0.0.0-20260607030806-9a7c6df8fff9 h1:cIeRPijLwOq3Xpn0Bfy2PV5ApLiNPuKKzsiEhNW/e9M=
+github.com/loanem-backend/protos v0.0.0-20260607030806-9a7c6df8fff9/go.mod h1:WeVOgyBItLRSJ1mgjcFcGWvvKgpTEoaYxCWHUtUr0fA=
+github.com/loanem-backend/protos v0.0.0-20260607182005-d9759c961bf5 h1:6oQo6QVj8mipevZRB5sAhsEcvZLGJscun75qGwd5ors=
+github.com/loanem-backend/protos v0.0.0-20260607182005-d9759c961bf5/go.mod h1:WeVOgyBItLRSJ1mgjcFcGWvvKgpTEoaYxCWHUtUr0fA=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rabbitmq/amqp091-go v1.11.0 h1:HxIctVm9Gid/Vtn706necmZ7Wj6pgGI2eqplRbEY8O8=
 github.com/rabbitmq/amqp091-go v1.11.0/go.mod h1:Hy4jKW5kQART1u+JkDTF9YYOQUHXqMuhrgxOEeS7G4o=

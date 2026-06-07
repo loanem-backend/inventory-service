@@ -13,6 +13,7 @@ type Instrument struct {
 	Name      string
 	CreatedAt pgtype.Timestamp
 	UpdatedAt pgtype.Timestamp
+	Picture   pgtype.Text
 }
 
 type ReplCourse struct {
@@ -31,4 +32,10 @@ type Toolkit struct {
 	OutOfOrderCount int32
 	CreatedAt       pgtype.Timestamp
 	UpdatedAt       pgtype.Timestamp
+}
+
+type ToolkitInstrument struct {
+	ToolkitID    int16
+	InstrumentID int16
+	CreatedAt    pgtype.Timestamp
 }

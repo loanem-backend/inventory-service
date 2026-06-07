@@ -27,3 +27,12 @@ func (s *InstrumentServer) AddInstrument(ctx context.Context, req *pbinventory.A
 
 	return mapper.IntToAddInstrumentResponse(idData), nil
 }
+
+func (s *InstrumentServer) GetAllInstruments(ctx context.Context, req *pbinventory.GetAllInstrumentsRequest) (*pbinventory.GetAllInstrumentsResponse, error) {
+	instrumentsData, err := s.serv.GetAllInstruments(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return mapper.InstrumentsToGetAllInstrumentsResponse(instrumentsData), nil
+}

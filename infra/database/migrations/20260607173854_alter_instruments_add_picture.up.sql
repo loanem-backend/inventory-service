@@ -1,0 +1,8 @@
+ALTER TABLE instruments
+    ADD COLUMN picture TEXT NULL;
+
+CREATE TABLE IF NOT EXISTS toolkit_instruments (
+    toolkit_id SMALLINT NOT NULL REFERENCES toolkits(id) ON DELETE CASCADE,
+    instrument_id SMALLINT NOT NULL REFERENCES instruments(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

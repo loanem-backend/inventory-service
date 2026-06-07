@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/loanem-backend/inventory-service/internal/entity"
 	"github.com/loanem-backend/inventory-service/internal/repository"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -10,6 +11,8 @@ import (
 
 type InstrumentService interface {
 	AddInstrument(ctx context.Context, name string) (int32, error)
+	RemoveInstrument(ctx context.Context, instrumentID int32) error
+	GetAllInstruments(ctx context.Context) ([]*entity.Instrument, error)
 }
 
 type instrumentService struct {
@@ -29,4 +32,21 @@ func (s *instrumentService) AddInstrument(ctx context.Context, name string) (int
 	}
 
 	return int32(instrumentID), nil
+}
+
+func (s *instrumentService) RemoveInstrument(ctx context.Context, instrumentID int32) error {
+	if err := s.instrumentRepo.Delete(ctx, int16(instrumentID)); err != nil {
+		return status.Error(codes.Internal, err.Error())
+	}
+
+	return nil
+}
+
+func (s *instrumentService) GetAllInstruments(ctx context.Context) ([]*entity.Instrument, error) {
+	instruments, err := s.instrumentRepo.FindAll(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return instruments, nil
 }

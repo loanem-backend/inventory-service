@@ -11,6 +11,24 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const deleteToolkitInstrument = `-- name: DeleteToolkitInstrument :exec
+DELETE FROM toolkit_instruments
+WHERE
+        toolkit_id = $1
+    AND
+        instrument_id = $2
+`
+
+type DeleteToolkitInstrumentParams struct {
+	ToolkitID    int16
+	InstrumentID int16
+}
+
+func (q *Queries) DeleteToolkitInstrument(ctx context.Context, arg DeleteToolkitInstrumentParams) error {
+	_, err := q.db.Exec(ctx, deleteToolkitInstrument, arg.ToolkitID, arg.InstrumentID)
+	return err
+}
+
 const insertToolkit = `-- name: InsertToolkit :one
 INSERT INTO toolkits (kit_name, total_count)
 VALUES ($1, $2)
@@ -27,6 +45,21 @@ func (q *Queries) InsertToolkit(ctx context.Context, arg InsertToolkitParams) (i
 	var id int16
 	err := row.Scan(&id)
 	return id, err
+}
+
+const insertToolkitInstrument = `-- name: InsertToolkitInstrument :exec
+INSERT INTO toolkit_instruments (toolkit_id, instrument_id)
+VALUES ($1, $2)
+`
+
+type InsertToolkitInstrumentParams struct {
+	ToolkitID    int16
+	InstrumentID int16
+}
+
+func (q *Queries) InsertToolkitInstrument(ctx context.Context, arg InsertToolkitInstrumentParams) error {
+	_, err := q.db.Exec(ctx, insertToolkitInstrument, arg.ToolkitID, arg.InstrumentID)
+	return err
 }
 
 const updateToolkitCourseID = `-- name: UpdateToolkitCourseID :exec
