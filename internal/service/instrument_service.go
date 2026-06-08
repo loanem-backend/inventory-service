@@ -2,8 +2,12 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/loanem-backend/api-gateway/pkg/storage"
 	"github.com/loanem-backend/inventory-service/internal/entity"
 	"github.com/loanem-backend/inventory-service/internal/repository"
 	"google.golang.org/grpc/codes"
@@ -19,11 +23,13 @@ type InstrumentService interface {
 
 type instrumentService struct {
 	instrumentRepo repository.InstrumentRepository
+	storage        *storage.S3Client
 }
 
-func NewInstrumentService(ir repository.InstrumentRepository) InstrumentService {
+func NewInstrumentService(ir repository.InstrumentRepository, sc *storage.S3Client) InstrumentService {
 	return &instrumentService{
 		instrumentRepo: ir,
+		storage:        sc,
 	}
 }
 
@@ -50,9 +56,27 @@ func (s *instrumentService) GetAllInstruments(ctx context.Context) ([]*entity.In
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	// set picture url
+	if err := s.setInstrumentsPicture(ctx, instruments); err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
 
 	return instruments, nil
+}
+
+func (s *instrumentService) setInstrumentsPicture(ctx context.Context, instruments []*entity.Instrument) error {
+	for _, i := range instruments {
+		req, err := s.storage.PresignClient.PresignGetObject(ctx, &s3.GetObjectInput{
+			Bucket: aws.String(s.storage.Bucket),
+			Key:    aws.String(i.Picture),
+		}, s3.WithPresignExpires(1*time.Hour))
+		if err != nil {
+			return fmt.Errorf("presign get object: %w", err)
+		}
+
+		i.Picture = req.URL
+	}
+
+	return nil
 }
 
 func (s *instrumentService) SetInstrumentPicture(ctx context.Context, instrument *entity.Instrument) error {
