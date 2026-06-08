@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/loanem-backend/inventory-service/infra/database/sqlc"
 	"github.com/loanem-backend/inventory-service/internal/entity"
 )
@@ -11,6 +12,7 @@ type InstrumentRepository interface {
 	Insert(ctx context.Context, name string) (int16, error)
 	Delete(ctx context.Context, iID int16) error
 	FindAll(ctx context.Context) ([]*entity.Instrument, error)
+	UpdatePicture(ctx context.Context, i *entity.Instrument) error
 }
 
 type instrumentRepository struct {
@@ -62,4 +64,16 @@ func toInstrument(row sqlc.Instrument) *entity.Instrument {
 		CreatedAt: row.CreatedAt.Time,
 		UpdatedAt: row.UpdatedAt.Time,
 	}
+}
+
+func (r *instrumentRepository) UpdatePicture(ctx context.Context, i *entity.Instrument) error {
+	if err := r.db.UpdateInstrumentPicture(ctx, sqlc.UpdateInstrumentPictureParams{
+		ID:        int16(i.ID),
+		Picture:   pgtype.Text{String: i.Picture, Valid: true},
+		UpdatedAt: pgtype.Timestamp{Time: i.UpdatedAt, Valid: true},
+	}); err != nil {
+		return err
+	}
+
+	return nil
 }

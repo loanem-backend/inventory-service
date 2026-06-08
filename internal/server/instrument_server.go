@@ -36,3 +36,11 @@ func (s *InstrumentServer) GetAllInstruments(ctx context.Context, req *pbinvento
 
 	return mapper.InstrumentsToGetAllInstrumentsResponse(instrumentsData), nil
 }
+
+func (s *InstrumentServer) SetInstrumentPicture(ctx context.Context, req *pbinventory.SetInstrumentPictureRequest) (*pbinventory.SetInstrumentPictureResponse, error) {
+	if err := s.serv.SetInstrumentPicture(ctx, mapper.SetInstrumentPictureRequestToInstrument(req)); err != nil {
+		return nil, err
+	}
+
+	return &pbinventory.SetInstrumentPictureResponse{}, nil
+}

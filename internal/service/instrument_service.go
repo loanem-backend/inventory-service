@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"time"
 
 	"github.com/loanem-backend/inventory-service/internal/entity"
 	"github.com/loanem-backend/inventory-service/internal/repository"
@@ -13,6 +14,7 @@ type InstrumentService interface {
 	AddInstrument(ctx context.Context, name string) (int32, error)
 	RemoveInstrument(ctx context.Context, instrumentID int32) error
 	GetAllInstruments(ctx context.Context) ([]*entity.Instrument, error)
+	SetInstrumentPicture(ctx context.Context, instrument *entity.Instrument) error
 }
 
 type instrumentService struct {
@@ -49,4 +51,14 @@ func (s *instrumentService) GetAllInstruments(ctx context.Context) ([]*entity.In
 	}
 
 	return instruments, nil
+}
+
+func (s *instrumentService) SetInstrumentPicture(ctx context.Context, instrument *entity.Instrument) error {
+	instrument.UpdatedAt = time.Now()
+
+	if err := s.instrumentRepo.UpdatePicture(ctx, instrument); err != nil {
+		return err
+	}
+
+	return nil
 }
