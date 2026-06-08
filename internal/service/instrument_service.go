@@ -50,6 +50,8 @@ func (s *instrumentService) GetAllInstruments(ctx context.Context) ([]*entity.In
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
+	// set picture url
+
 	return instruments, nil
 }
 

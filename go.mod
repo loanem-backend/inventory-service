@@ -2,7 +2,7 @@ module github.com/loanem-backend/inventory-service
 
 go 1.25.0
 
-require github.com/loanem-backend/protos v0.0.0-20260608025659-37f595ffef20
+require github.com/loanem-backend/protos v0.0.0-20260608094423-2d4cc8ae83af
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect

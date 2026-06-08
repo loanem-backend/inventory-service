@@ -16,6 +16,7 @@ func InstrumentToPBInstrument(i *entity.Instrument) *pbinventory.Instrument {
 	return &pbinventory.Instrument{
 		Id:        int32(i.ID),
 		Name:      i.Name,
+		Picture:   i.Picture,
 		CreatedAt: timestamppb.New(i.CreatedAt),
 		UpdatedAt: timestamppb.New(i.UpdatedAt),
 	}

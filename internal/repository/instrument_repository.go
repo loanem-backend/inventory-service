@@ -58,12 +58,18 @@ func (r *instrumentRepository) FindAll(ctx context.Context) ([]*entity.Instrumen
 }
 
 func toInstrument(row sqlc.Instrument) *entity.Instrument {
-	return &entity.Instrument{
+	instrument := entity.Instrument{
 		ID:        int(row.ID),
 		Name:      row.Name,
 		CreatedAt: row.CreatedAt.Time,
 		UpdatedAt: row.UpdatedAt.Time,
 	}
+
+	if row.Picture.Valid {
+		instrument.Picture = row.Picture.String
+	}
+
+	return &instrument
 }
 
 func (r *instrumentRepository) UpdatePicture(ctx context.Context, i *entity.Instrument) error {
