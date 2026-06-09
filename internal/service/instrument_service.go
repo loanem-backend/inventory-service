@@ -34,7 +34,10 @@ func NewInstrumentService(ir repository.InstrumentRepository, sc *storage.S3Clie
 }
 
 func (s *instrumentService) AddInstrument(ctx context.Context, name string) (int32, error) {
-	instrumentID, err := s.instrumentRepo.Insert(ctx, name)
+	instrumentID, err := s.instrumentRepo.Insert(ctx, &entity.Instrument{
+		Name:    name,
+		Picture: defaultInstrumentPicture,
+	})
 	if err != nil {
 		return 0, status.Error(codes.Internal, "failed inserting instrument to database")
 	}
@@ -56,14 +59,14 @@ func (s *instrumentService) GetAllInstruments(ctx context.Context) ([]*entity.In
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	if err := s.setInstrumentsPicture(ctx, instruments); err != nil {
+	if err := s.setInstrumentsPicture(ctx, instruments...); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	return instruments, nil
 }
 
-func (s *instrumentService) setInstrumentsPicture(ctx context.Context, instruments []*entity.Instrument) error {
+func (s *instrumentService) setInstrumentsPicture(ctx context.Context, instruments ...*entity.Instrument) error {
 	for _, i := range instruments {
 		req, err := s.storage.PresignClient.PresignGetObject(ctx, &s3.GetObjectInput{
 			Bucket: aws.String(s.storage.Bucket),
@@ -81,6 +84,10 @@ func (s *instrumentService) setInstrumentsPicture(ctx context.Context, instrumen
 
 func (s *instrumentService) SetInstrumentPicture(ctx context.Context, instrument *entity.Instrument) error {
 	instrument.UpdatedAt = time.Now()
+
+	if instrument.Picture == "" {
+		instrument.Picture = defaultInstrumentPicture
+	}
 
 	if err := s.instrumentRepo.UpdatePicture(ctx, instrument); err != nil {
 		return err

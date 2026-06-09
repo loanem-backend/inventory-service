@@ -9,7 +9,7 @@ import (
 )
 
 type InstrumentRepository interface {
-	Insert(ctx context.Context, name string) (int16, error)
+	Insert(ctx context.Context, i *entity.Instrument) (int16, error)
 	Delete(ctx context.Context, iID int16) error
 	FindAll(ctx context.Context) ([]*entity.Instrument, error)
 	UpdatePicture(ctx context.Context, i *entity.Instrument) error
@@ -25,8 +25,11 @@ func NewInstrumentRepository(q *sqlc.Queries) InstrumentRepository {
 	}
 }
 
-func (r *instrumentRepository) Insert(ctx context.Context, name string) (int16, error) {
-	result, err := r.db.InsertInstrument(ctx, name)
+func (r *instrumentRepository) Insert(ctx context.Context, i *entity.Instrument) (int16, error) {
+	result, err := r.db.InsertInstrument(ctx, sqlc.InsertInstrumentParams{
+		Name:    i.Name,
+		Picture: pgtype.Text{String: i.Picture, Valid: true},
+	})
 	if err != nil {
 		return 0, err
 	}

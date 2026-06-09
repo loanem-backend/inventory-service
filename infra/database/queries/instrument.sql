@@ -1,6 +1,6 @@
 -- name: InsertInstrument :one
-INSERT INTO instruments (name)
-VALUES ($1)
+INSERT INTO instruments (name, picture)
+VALUES ($1, $2)
 RETURNING id;
 
 -- name: DeleteInstrumentByID :exec

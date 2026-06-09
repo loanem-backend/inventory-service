@@ -86,13 +86,18 @@ func (q *Queries) FindInstrumentsByToolkitID(ctx context.Context, toolkitID int1
 }
 
 const insertInstrument = `-- name: InsertInstrument :one
-INSERT INTO instruments (name)
-VALUES ($1)
+INSERT INTO instruments (name, picture)
+VALUES ($1, $2)
 RETURNING id
 `
 
-func (q *Queries) InsertInstrument(ctx context.Context, name string) (int16, error) {
-	row := q.db.QueryRow(ctx, insertInstrument, name)
+type InsertInstrumentParams struct {
+	Name    string
+	Picture pgtype.Text
+}
+
+func (q *Queries) InsertInstrument(ctx context.Context, arg InsertInstrumentParams) (int16, error) {
+	row := q.db.QueryRow(ctx, insertInstrument, arg.Name, arg.Picture)
 	var id int16
 	err := row.Scan(&id)
 	return id, err
