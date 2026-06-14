@@ -34,6 +34,12 @@ func (s *InstrumentServer) GetAllInstruments(ctx context.Context, req *pbinvento
 		return nil, err
 	}
 
+	if instrumentsData == nil {
+		return &pbinventory.GetAllInstrumentsResponse{
+			Instruments: []*pbinventory.Instrument{},
+		}, nil
+	}
+
 	return mapper.InstrumentsToGetAllInstrumentsResponse(instrumentsData), nil
 }
 
