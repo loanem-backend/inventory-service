@@ -30,7 +30,9 @@ func main() {
 
 	s := grpc.NewServer()
 
-	is, ts, cs := service.Initialize(db)
+	storageClient := config.InitStorageClient()
+
+	is, ts, cs := service.Initialize(db, storageClient)
 
 	server.Start(s, is, ts)
 

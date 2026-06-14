@@ -27,3 +27,26 @@ func (s *InstrumentServer) AddInstrument(ctx context.Context, req *pbinventory.A
 
 	return mapper.IntToAddInstrumentResponse(idData), nil
 }
+
+func (s *InstrumentServer) GetAllInstruments(ctx context.Context, req *pbinventory.GetAllInstrumentsRequest) (*pbinventory.GetAllInstrumentsResponse, error) {
+	instrumentsData, err := s.serv.GetAllInstruments(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if instrumentsData == nil {
+		return &pbinventory.GetAllInstrumentsResponse{
+			Instruments: []*pbinventory.Instrument{},
+		}, nil
+	}
+
+	return mapper.InstrumentsToGetAllInstrumentsResponse(instrumentsData), nil
+}
+
+func (s *InstrumentServer) SetInstrumentPicture(ctx context.Context, req *pbinventory.SetInstrumentPictureRequest) (*pbinventory.SetInstrumentPictureResponse, error) {
+	if err := s.serv.SetInstrumentPicture(ctx, mapper.SetInstrumentPictureRequestToInstrument(req)); err != nil {
+		return nil, err
+	}
+
+	return &pbinventory.SetInstrumentPictureResponse{}, nil
+}

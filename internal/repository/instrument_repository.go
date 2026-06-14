@@ -3,11 +3,16 @@ package repository
 import (
 	"context"
 
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/loanem-backend/inventory-service/infra/database/sqlc"
+	"github.com/loanem-backend/inventory-service/internal/entity"
 )
 
 type InstrumentRepository interface {
-	Insert(ctx context.Context, name string) (int16, error)
+	Insert(ctx context.Context, i *entity.Instrument) (int16, error)
+	Delete(ctx context.Context, iID int16) error
+	FindAll(ctx context.Context) ([]*entity.Instrument, error)
+	UpdatePicture(ctx context.Context, i *entity.Instrument) error
 }
 
 type instrumentRepository struct {
@@ -20,11 +25,64 @@ func NewInstrumentRepository(q *sqlc.Queries) InstrumentRepository {
 	}
 }
 
-func (r *instrumentRepository) Insert(ctx context.Context, name string) (int16, error) {
-	result, err := r.db.InsertInstrument(ctx, name)
+func (r *instrumentRepository) Insert(ctx context.Context, i *entity.Instrument) (int16, error) {
+	result, err := r.db.InsertInstrument(ctx, sqlc.InsertInstrumentParams{
+		Name:    i.Name,
+		Picture: pgtype.Text{String: i.Picture, Valid: true},
+	})
 	if err != nil {
 		return 0, err
 	}
 
 	return result, nil
+}
+
+func (r *instrumentRepository) Delete(ctx context.Context, iID int16) error {
+	if err := r.db.DeleteInstrumentByID(ctx, iID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *instrumentRepository) FindAll(ctx context.Context) ([]*entity.Instrument, error) {
+	rows, err := r.db.FindAllInstruments(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	instruments := make([]*entity.Instrument, len(rows))
+
+	for i, row := range rows {
+		instruments[i] = toInstrument(row)
+	}
+
+	return instruments, nil
+}
+
+func toInstrument(row sqlc.Instrument) *entity.Instrument {
+	instrument := entity.Instrument{
+		ID:        int(row.ID),
+		Name:      row.Name,
+		CreatedAt: row.CreatedAt.Time,
+		UpdatedAt: row.UpdatedAt.Time,
+	}
+
+	if row.Picture.Valid {
+		instrument.Picture = row.Picture.String
+	}
+
+	return &instrument
+}
+
+func (r *instrumentRepository) UpdatePicture(ctx context.Context, i *entity.Instrument) error {
+	if err := r.db.UpdateInstrumentPicture(ctx, sqlc.UpdateInstrumentPictureParams{
+		ID:        int16(i.ID),
+		Picture:   pgtype.Text{String: i.Picture, Valid: true},
+		UpdatedAt: pgtype.Timestamp{Time: i.UpdatedAt, Valid: true},
+	}); err != nil {
+		return err
+	}
+
+	return nil
 }

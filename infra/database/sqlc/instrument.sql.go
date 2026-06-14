@@ -7,17 +7,136 @@ package sqlc
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const deleteInstrumentByID = `-- name: DeleteInstrumentByID :exec
+DELETE FROM instruments
+WHERE id = $1
+`
+
+func (q *Queries) DeleteInstrumentByID(ctx context.Context, id int16) error {
+	_, err := q.db.Exec(ctx, deleteInstrumentByID, id)
+	return err
+}
+
+const findAllInstruments = `-- name: FindAllInstruments :many
+SELECT id, name, created_at, updated_at, picture FROM instruments
+ORDER BY name
+`
+
+func (q *Queries) FindAllInstruments(ctx context.Context) ([]Instrument, error) {
+	rows, err := q.db.Query(ctx, findAllInstruments)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Instrument
+	for rows.Next() {
+		var i Instrument
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Picture,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const findInstrumentsByToolkitID = `-- name: FindInstrumentsByToolkitID :many
+SELECT i.id, i.name, i.created_at, i.updated_at, i.picture FROM instruments i
+INNER JOIN toolkit_instruments ti ON ti.instrument_id = i.id
+WHERE ti.toolkit_id = $1
+ORDER BY name
+`
+
+func (q *Queries) FindInstrumentsByToolkitID(ctx context.Context, toolkitID int16) ([]Instrument, error) {
+	rows, err := q.db.Query(ctx, findInstrumentsByToolkitID, toolkitID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Instrument
+	for rows.Next() {
+		var i Instrument
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Picture,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const insertInstrument = `-- name: InsertInstrument :one
-INSERT INTO instruments (name)
-VALUES ($1)
+INSERT INTO instruments (name, picture)
+VALUES ($1, $2)
 RETURNING id
 `
 
-func (q *Queries) InsertInstrument(ctx context.Context, name string) (int16, error) {
-	row := q.db.QueryRow(ctx, insertInstrument, name)
+type InsertInstrumentParams struct {
+	Name    string
+	Picture pgtype.Text
+}
+
+func (q *Queries) InsertInstrument(ctx context.Context, arg InsertInstrumentParams) (int16, error) {
+	row := q.db.QueryRow(ctx, insertInstrument, arg.Name, arg.Picture)
 	var id int16
 	err := row.Scan(&id)
 	return id, err
+}
+
+const updateInstrumentName = `-- name: UpdateInstrumentName :exec
+UPDATE instruments
+SET
+    name = $1,
+    updated_at = $2
+WHERE id = $3
+`
+
+type UpdateInstrumentNameParams struct {
+	Name      string
+	UpdatedAt pgtype.Timestamp
+	ID        int16
+}
+
+func (q *Queries) UpdateInstrumentName(ctx context.Context, arg UpdateInstrumentNameParams) error {
+	_, err := q.db.Exec(ctx, updateInstrumentName, arg.Name, arg.UpdatedAt, arg.ID)
+	return err
+}
+
+const updateInstrumentPicture = `-- name: UpdateInstrumentPicture :exec
+UPDATE instruments
+SET
+    picture = $1,
+    updated_at = $2
+WHERE id = $3
+`
+
+type UpdateInstrumentPictureParams struct {
+	Picture   pgtype.Text
+	UpdatedAt pgtype.Timestamp
+	ID        int16
+}
+
+func (q *Queries) UpdateInstrumentPicture(ctx context.Context, arg UpdateInstrumentPictureParams) error {
+	_, err := q.db.Exec(ctx, updateInstrumentPicture, arg.Picture, arg.UpdatedAt, arg.ID)
+	return err
 }

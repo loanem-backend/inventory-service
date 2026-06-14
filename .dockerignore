@@ -3,5 +3,6 @@
 *.env
 .idea
 .vscode
-bin/
-vendor/
+bin
+obj
+vendor
