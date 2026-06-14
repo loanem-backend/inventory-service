@@ -13,6 +13,10 @@ func IntToAddInstrumentResponse(id int32) *pbinventory.AddInstrumentResponse {
 }
 
 func InstrumentToPBInstrument(i *entity.Instrument) *pbinventory.Instrument {
+	if i == nil {
+		return &pbinventory.Instrument{}
+	}
+
 	return &pbinventory.Instrument{
 		Id:        int32(i.ID),
 		Name:      i.Name,
