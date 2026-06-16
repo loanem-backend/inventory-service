@@ -14,7 +14,7 @@ func IntToAddInstrumentResponse(id int32) *pbinventory.AddInstrumentResponse {
 
 func InstrumentToPBInstrument(i *entity.Instrument) *pbinventory.Instrument {
 	if i == nil {
-		return &pbinventory.Instrument{}
+		return nil
 	}
 
 	return &pbinventory.Instrument{
@@ -27,10 +27,12 @@ func InstrumentToPBInstrument(i *entity.Instrument) *pbinventory.Instrument {
 }
 
 func InstrumentsToGetAllInstrumentsResponse(instruments []*entity.Instrument) *pbinventory.GetAllInstrumentsResponse {
-	pbInstruments := make([]*pbinventory.Instrument, len(instruments))
+	pbInstruments := make([]*pbinventory.Instrument, 0, len(instruments))
 
-	for idx, i := range instruments {
-		pbInstruments[idx] = InstrumentToPBInstrument(i)
+	for _, i := range instruments {
+		if pbInstrument := InstrumentToPBInstrument(i); pbInstrument != nil {
+			pbInstruments = append(pbInstruments, pbInstrument)
+		}
 	}
 
 	return &pbinventory.GetAllInstrumentsResponse{

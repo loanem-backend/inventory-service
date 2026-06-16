@@ -13,6 +13,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/testing/protocmp"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func TestAddInstrument(t *testing.T) {
@@ -110,13 +111,21 @@ func TestGetAllInstruments(t *testing.T) {
 			assertCase: func(t *testing.T, resp *pbinventory.GetAllInstrumentsResponse, err error) {
 				assert.NoError(t, err)
 				assert.NotNil(t, resp)
-				assert.Equal(t, len(sampleInstruments), len(resp.GetInstruments()))
+				resultInstruments := resp.GetInstruments()
+				assert.Equal(t, len(sampleInstruments), len(resultInstruments))
 
-				lastIndex := len(sampleInstruments) - 1
-				expectedTime := sampleInstruments[lastIndex].CreatedAt
-				actualTime := resp.GetInstruments()[lastIndex].GetCreatedAt().AsTime()
-				if !expectedTime.Equal(actualTime) {
-					t.Errorf("Expected time %v, got %v", expectedTime, actualTime)
+				for i := range resultInstruments {
+					expected := &pbinventory.Instrument{
+						Id:        int32(sampleInstruments[i].ID),
+						Name:      sampleInstruments[i].Name,
+						Picture:   sampleInstruments[i].Picture,
+						CreatedAt: timestamppb.New(sampleInstruments[i].CreatedAt),
+						UpdatedAt: timestamppb.New(sampleInstruments[i].UpdatedAt),
+					}
+					diff := cmp.Diff(expected, resultInstruments[i], protocmp.Transform())
+					if diff != "" {
+						t.Errorf("Mapping result mismatch: %s\n", diff)
+					}
 				}
 			},
 		},
