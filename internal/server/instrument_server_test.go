@@ -199,3 +199,66 @@ func TestGetAllInstruments(t *testing.T) {
 		})
 	}
 }
+
+func TestSetInstrumentPicture(t *testing.T) {
+	sampleReq := &pbinventory.SetInstrumentPictureRequest{
+		Id:  456,
+		Key: "Picture Key",
+	}
+
+	tests := []struct {
+		name         string
+		mockBehavior func(m *service_mock.MockInstrumentService)
+		input        *pbinventory.SetInstrumentPictureRequest
+		assertCase   func(t *testing.T, resp *pbinventory.SetInstrumentPictureResponse, err error)
+	}{
+		{
+			name: "Success_Updated",
+			mockBehavior: func(m *service_mock.MockInstrumentService) {
+				m.EXPECT().
+					SetInstrumentPicture(gomock.Any(), &entity.Instrument{
+						ID:      int(sampleReq.GetId()),
+						Picture: sampleReq.GetKey(),
+					}).
+					Return(nil)
+			},
+			input: sampleReq,
+			assertCase: func(t *testing.T, resp *pbinventory.SetInstrumentPictureResponse, err error) {
+				assert.NoError(t, err)
+			},
+		},
+		{
+			name: "Failed_Internal",
+			mockBehavior: func(m *service_mock.MockInstrumentService) {
+				m.EXPECT().
+					SetInstrumentPicture(gomock.Any(), gomock.Any()).
+					Return(status.Error(codes.Internal, ""))
+			},
+			input: &pbinventory.SetInstrumentPictureRequest{
+				Id:  0,
+				Key: "",
+			},
+			assertCase: func(t *testing.T, resp *pbinventory.SetInstrumentPictureResponse, err error) {
+				assert.Nil(t, resp)
+				assert.Error(t, err)
+				assert.Contains(t, err.Error(), "Internal")
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			mockInstrumentService := service_mock.NewMockInstrumentService(ctrl)
+			test.mockBehavior(mockInstrumentService)
+
+			s := NewInstrumentServer(mockInstrumentService)
+
+			resp, err := s.SetInstrumentPicture(t.Context(), test.input)
+
+			test.assertCase(t, resp, err)
+		})
+	}
+}

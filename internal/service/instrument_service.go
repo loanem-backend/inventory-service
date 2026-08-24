@@ -83,12 +83,17 @@ func (s *instrumentService) setInstrumentsPicture(ctx context.Context, instrumen
 }
 
 func (s *instrumentService) SetInstrumentPicture(ctx context.Context, instrument *entity.Instrument) error {
+	if instrument == nil {
+		return status.Error(codes.InvalidArgument, "nil argument")
+	}
+
 	instrument.UpdatedAt = time.Now()
 
 	if instrument.Picture == "" {
 		instrument.Picture = defaultInstrumentPicture
 	}
 
+	instrument.UpdatedAt = time.Now()
 	if err := s.instrumentRepo.UpdatePicture(ctx, instrument); err != nil {
 		return err
 	}

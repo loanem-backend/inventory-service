@@ -203,3 +203,41 @@ func TestInstrumentsToGetAllInstrumentsResponse(t *testing.T) {
 		})
 	}
 }
+
+func TestSetInstrumentPictureRequestToInstrument(t *testing.T) {
+	sampleReq := &pbinventory.SetInstrumentPictureRequest{
+		Id:  890,
+		Key: "Picture key",
+	}
+
+	tests := []struct {
+		name       string
+		input      *pbinventory.SetInstrumentPictureRequest
+		assertCase func(t *testing.T, result *entity.Instrument)
+	}{
+		{
+			name:  "Success",
+			input: sampleReq,
+			assertCase: func(t *testing.T, result *entity.Instrument) {
+				assert.NotNil(t, result)
+				assert.Equal(t, int(sampleReq.GetId()), result.ID)
+				assert.Equal(t, sampleReq.GetKey(), result.Picture)
+			},
+		},
+		{
+			name:  "NilInput",
+			input: nil,
+			assertCase: func(t *testing.T, result *entity.Instrument) {
+				assert.Nil(t, result)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			result := SetInstrumentPictureRequestToInstrument(test.input)
+
+			test.assertCase(t, result)
+		})
+	}
+}
