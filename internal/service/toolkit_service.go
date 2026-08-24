@@ -11,6 +11,8 @@ import (
 
 type ToolkitService interface {
 	Create(ctx context.Context, t *entity.Toolkit) (int16, error)
+	GetAll(ctx context.Context) ([]*entity.Toolkit, error)
+	GetWithInstruments(ctx context.Context) ([]*entity.Toolkit, error)
 }
 
 type toolkitService struct {
@@ -30,4 +32,22 @@ func (s *toolkitService) Create(ctx context.Context, t *entity.Toolkit) (int16, 
 	}
 
 	return toolkitID, nil
+}
+
+func (s *toolkitService) GetAll(ctx context.Context) ([]*entity.Toolkit, error) {
+	toolkits, err := s.toolkitRepo.FindAll(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return toolkits, nil
+}
+
+func (s *toolkitService) GetWithInstruments(ctx context.Context) ([]*entity.Toolkit, error) {
+	toolkits, err := s.toolkitRepo.FindWithInstruments(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return toolkits, nil
 }

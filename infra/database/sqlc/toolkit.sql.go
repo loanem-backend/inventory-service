@@ -29,6 +29,104 @@ func (q *Queries) DeleteToolkitInstrument(ctx context.Context, arg DeleteToolkit
 	return err
 }
 
+const findAllToolkits = `-- name: FindAllToolkits :many
+SELECT id, kit_name, course_id, total_count, out_of_order_count, created_at, updated_at FROM toolkits
+ORDER BY kit_name
+`
+
+func (q *Queries) FindAllToolkits(ctx context.Context) ([]Toolkit, error) {
+	rows, err := q.db.Query(ctx, findAllToolkits)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Toolkit
+	for rows.Next() {
+		var i Toolkit
+		if err := rows.Scan(
+			&i.ID,
+			&i.KitName,
+			&i.CourseID,
+			&i.TotalCount,
+			&i.OutOfOrderCount,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const findToolkitsWithInstruments = `-- name: FindToolkitsWithInstruments :many
+SELECT
+    ti.toolkit_id,
+    t.kit_name,
+    t.course_id,
+    t.total_count,
+    t.out_of_order_count,
+    t.created_at AS toolkit_created_at,
+    t.updated_at AS toolkit_updated_at,
+    ti.instrument_id,
+    i.name AS instrument_name,
+    i.created_at AS instrument_created_at,
+    i.updated_at AS instrument_updated_at
+FROM toolkit_instruments ti
+INNER JOIN toolkits t ON ti.toolkit_id = t.id
+INNER JOIN instruments i ON ti.instrument_id = i.id
+ORDER BY t.kit_name, t.id
+`
+
+type FindToolkitsWithInstrumentsRow struct {
+	ToolkitID           int16
+	KitName             string
+	CourseID            pgtype.Int4
+	TotalCount          int32
+	OutOfOrderCount     int32
+	ToolkitCreatedAt    pgtype.Timestamp
+	ToolkitUpdatedAt    pgtype.Timestamp
+	InstrumentID        int16
+	InstrumentName      string
+	InstrumentCreatedAt pgtype.Timestamp
+	InstrumentUpdatedAt pgtype.Timestamp
+}
+
+func (q *Queries) FindToolkitsWithInstruments(ctx context.Context) ([]FindToolkitsWithInstrumentsRow, error) {
+	rows, err := q.db.Query(ctx, findToolkitsWithInstruments)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []FindToolkitsWithInstrumentsRow
+	for rows.Next() {
+		var i FindToolkitsWithInstrumentsRow
+		if err := rows.Scan(
+			&i.ToolkitID,
+			&i.KitName,
+			&i.CourseID,
+			&i.TotalCount,
+			&i.OutOfOrderCount,
+			&i.ToolkitCreatedAt,
+			&i.ToolkitUpdatedAt,
+			&i.InstrumentID,
+			&i.InstrumentName,
+			&i.InstrumentCreatedAt,
+			&i.InstrumentUpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const insertToolkit = `-- name: InsertToolkit :one
 INSERT INTO toolkits (kit_name, total_count)
 VALUES ($1, $2)

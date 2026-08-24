@@ -27,3 +27,18 @@ func (s *ToolkitServer) AddToolkit(ctx context.Context, req *pbinventory.AddTool
 
 	return mapper.IntToAddToolkitResponse(idData), nil
 }
+
+func (s *ToolkitServer) GetAllToolkits(ctx context.Context, req *pbinventory.GetAllToolkitsRequest) (*pbinventory.GetAllToolkitsResponse, error) {
+	toolkitsData, err := s.toolkitServ.GetAll(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if toolkitsData == nil {
+		return &pbinventory.GetAllToolkitsResponse{
+			Toolkits: []*pbinventory.Toolkit{},
+		}, nil
+	}
+
+	return mapper.ToolkitsToGetAllToolkitsResponse(toolkitsData), nil
+}
