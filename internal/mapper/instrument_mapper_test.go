@@ -14,9 +14,7 @@ import (
 )
 
 func TestIntToAddInstrumentResponse(t *testing.T) {
-	sampleResponse := &pbinventory.AddInstrumentResponse{
-		Id: 98765,
-	}
+	var sampleID int32 = 98765
 
 	tests := []struct {
 		name       string
@@ -25,10 +23,10 @@ func TestIntToAddInstrumentResponse(t *testing.T) {
 	}{
 		{
 			name:  "Success",
-			input: sampleResponse.Id,
+			input: sampleID,
 			assertCase: func(t *testing.T, result *pbinventory.AddInstrumentResponse) {
 				assert.NotNil(t, result)
-				assert.Equal(t, sampleResponse.Id, result.GetId())
+				assert.Equal(t, sampleID, result.GetId())
 			},
 		},
 	}

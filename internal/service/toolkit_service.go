@@ -26,6 +26,10 @@ func NewToolkitService(tr repository.ToolkitRepository) ToolkitService {
 }
 
 func (s *toolkitService) Create(ctx context.Context, t *entity.Toolkit) (int16, error) {
+	if t == nil {
+		return 0, status.Error(codes.InvalidArgument, "nil argument")
+	}
+
 	toolkitID, err := s.toolkitRepo.Insert(ctx, t)
 	if err != nil {
 		return 0, status.Error(codes.Internal, err.Error())

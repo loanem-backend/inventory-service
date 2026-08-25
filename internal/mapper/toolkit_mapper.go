@@ -7,6 +7,10 @@ import (
 )
 
 func AddToolkitRequestToToolkit(req *pbinventory.AddToolkitRequest) *entity.Toolkit {
+	if req == nil {
+		return nil
+	}
+
 	return &entity.Toolkit{
 		KitName:    req.GetKitName(),
 		TotalCount: int(req.GetTotalCount()),
