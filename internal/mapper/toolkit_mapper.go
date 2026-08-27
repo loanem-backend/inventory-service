@@ -33,7 +33,7 @@ func ToolkitToPBToolkit(t *entity.Toolkit) *pbinventory.Toolkit {
 		KitName:         t.KitName,
 		CourseId:        int32(t.Course.ID),
 		TotalCount:      int32(t.TotalCount),
-		OutOfOrderCount: int32(t.TotalCount),
+		OutOfOrderCount: int32(t.OutOfOrderCount),
 		CreatedAt:       timestamppb.New(t.CreatedAt),
 		UpdatedAt:       timestamppb.New(t.UpdatedAt),
 	}
