@@ -41,6 +41,10 @@ func InstrumentsToGetAllInstrumentsResponse(instruments []*entity.Instrument) *p
 }
 
 func SetInstrumentPictureRequestToInstrument(req *pbinventory.SetInstrumentPictureRequest) *entity.Instrument {
+	if req == nil {
+		return nil
+	}
+
 	return &entity.Instrument{
 		ID:      int(req.GetId()),
 		Picture: req.GetKey(),

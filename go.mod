@@ -2,7 +2,7 @@ module github.com/loanem-backend/inventory-service
 
 go 1.25.0
 
-require github.com/loanem-backend/protos v0.0.0-20260608094423-2d4cc8ae83af
+require github.com/loanem-backend/protos v0.0.0-20260824065009-1e15d4566736
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.41.12 // indirect

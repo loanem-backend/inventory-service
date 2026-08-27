@@ -10,4 +10,5 @@ type Toolkit struct {
 	Course          Course
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
+	Instruments     []Instrument
 }
