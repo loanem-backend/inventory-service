@@ -52,3 +52,29 @@ func ToolkitsToGetAllToolkitsResponse(toolkits []*entity.Toolkit) *pbinventory.G
 		Toolkits: pbToolkits,
 	}
 }
+
+func ToolkitsToGetToolkitsWithInstrumentsResponse(toolkits []*entity.Toolkit) *pbinventory.GetToolkitsWithInstrumentsResponse {
+	pbToolkits := make([]*pbinventory.ToolkitWithInstruments, 0, len(toolkits))
+
+	for _, t := range toolkits {
+		if pbToolkit := ToolkitToPBToolkitWithInstruments(t); pbToolkit != nil {
+			pbToolkits = append(pbToolkits, pbToolkit)
+		}
+	}
+
+	return &pbinventory.GetToolkitsWithInstrumentsResponse{
+		Toolkits: pbToolkits,
+	}
+}
+
+func ToolkitToPBToolkitWithInstruments(t *entity.Toolkit) *pbinventory.ToolkitWithInstruments {
+	instruments := make([]*pbinventory.Instrument, 0)
+	for _, i := range t.Instruments {
+		instruments = append(instruments, InstrumentToPBInstrument(&i))
+	}
+
+	return &pbinventory.ToolkitWithInstruments{
+		Toolkit:     ToolkitToPBToolkit(t),
+		Instruments: instruments,
+	}
+}
