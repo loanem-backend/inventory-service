@@ -42,3 +42,18 @@ func (s *ToolkitServer) GetAllToolkits(ctx context.Context, req *pbinventory.Get
 
 	return mapper.ToolkitsToGetAllToolkitsResponse(toolkitsData), nil
 }
+
+func (s *ToolkitServer) GetToolkitsWithInstruments(ctx context.Context, req *pbinventory.GetToolkitsWithInstrumentsRequest) (*pbinventory.GetToolkitsWithInstrumentsResponse, error) {
+	toolkitsData, err := s.toolkitServ.GetWithInstruments(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if toolkitsData == nil {
+		return &pbinventory.GetToolkitsWithInstrumentsResponse{
+			Toolkits: []*pbinventory.ToolkitWithInstruments{},
+		}, nil
+	}
+
+	return mapper.ToolkitsToGetToolkitsWithInstrumentsResponse(toolkitsData), nil
+}
