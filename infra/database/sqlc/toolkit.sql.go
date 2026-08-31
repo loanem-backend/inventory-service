@@ -62,6 +62,184 @@ func (q *Queries) FindAllToolkits(ctx context.Context) ([]Toolkit, error) {
 	return items, nil
 }
 
+const findLoanByID = `-- name: FindLoanByID :one
+SELECT
+    l.id, l.toolkit_id, t.kit_name,
+    t.course_id, c.name AS course_name,
+    l.team_id, l.submitter_id,
+    l.date, l.session_number, l.status, l.note,
+    l.created_at, l.updated_at
+FROM loans l
+LEFT JOIN toolkits t ON t.id = l.toolkit_id
+LEFT JOIN repl_courses c ON c.id = t.course_id
+WHERE l.id = $1
+`
+
+type FindLoanByIDRow struct {
+	ID            string
+	ToolkitID     pgtype.Int2
+	KitName       pgtype.Text
+	CourseID      pgtype.Int4
+	CourseName    pgtype.Text
+	TeamID        pgtype.Text
+	SubmitterID   string
+	Date          pgtype.Date
+	SessionNumber pgtype.Int2
+	Status        NullLoanStatus
+	Note          pgtype.Text
+	CreatedAt     pgtype.Timestamp
+	UpdatedAt     pgtype.Timestamp
+}
+
+func (q *Queries) FindLoanByID(ctx context.Context, id string) (FindLoanByIDRow, error) {
+	row := q.db.QueryRow(ctx, findLoanByID, id)
+	var i FindLoanByIDRow
+	err := row.Scan(
+		&i.ID,
+		&i.ToolkitID,
+		&i.KitName,
+		&i.CourseID,
+		&i.CourseName,
+		&i.TeamID,
+		&i.SubmitterID,
+		&i.Date,
+		&i.SessionNumber,
+		&i.Status,
+		&i.Note,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const findLoansByDate = `-- name: FindLoansByDate :many
+SELECT
+    l.id, l.toolkit_id, t.kit_name,
+    t.course_id, c.name AS course_name,
+    l.team_id, l.submitter_id,
+    l.date, l.session_number, l.status, l.note,
+    l.created_at, l.updated_at
+FROM loans l
+LEFT JOIN toolkits t ON t.id = l.toolkit_id
+LEFT JOIN repl_courses c ON c.id = t.course_id
+WHERE l.date = $1
+ORDER BY l.session_number
+`
+
+type FindLoansByDateRow struct {
+	ID            string
+	ToolkitID     pgtype.Int2
+	KitName       pgtype.Text
+	CourseID      pgtype.Int4
+	CourseName    pgtype.Text
+	TeamID        pgtype.Text
+	SubmitterID   string
+	Date          pgtype.Date
+	SessionNumber pgtype.Int2
+	Status        NullLoanStatus
+	Note          pgtype.Text
+	CreatedAt     pgtype.Timestamp
+	UpdatedAt     pgtype.Timestamp
+}
+
+func (q *Queries) FindLoansByDate(ctx context.Context, date pgtype.Date) ([]FindLoansByDateRow, error) {
+	rows, err := q.db.Query(ctx, findLoansByDate, date)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []FindLoansByDateRow
+	for rows.Next() {
+		var i FindLoansByDateRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.ToolkitID,
+			&i.KitName,
+			&i.CourseID,
+			&i.CourseName,
+			&i.TeamID,
+			&i.SubmitterID,
+			&i.Date,
+			&i.SessionNumber,
+			&i.Status,
+			&i.Note,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const findLoansByTeamID = `-- name: FindLoansByTeamID :many
+SELECT
+    l.id, l.toolkit_id, t.kit_name,
+    t.course_id, c.name AS course_name,
+    l.team_id, l.submitter_id,
+    l.date, l.session_number, l.status, l.note,
+    l.created_at, l.updated_at
+FROM loans l
+LEFT JOIN toolkits t ON t.id = l.toolkit_id
+LEFT JOIN repl_courses c ON c.id = t.course_id
+WHERE l.team_id = $1
+ORDER BY l.date, l.session_number
+`
+
+type FindLoansByTeamIDRow struct {
+	ID            string
+	ToolkitID     pgtype.Int2
+	KitName       pgtype.Text
+	CourseID      pgtype.Int4
+	CourseName    pgtype.Text
+	TeamID        pgtype.Text
+	SubmitterID   string
+	Date          pgtype.Date
+	SessionNumber pgtype.Int2
+	Status        NullLoanStatus
+	Note          pgtype.Text
+	CreatedAt     pgtype.Timestamp
+	UpdatedAt     pgtype.Timestamp
+}
+
+func (q *Queries) FindLoansByTeamID(ctx context.Context, teamID pgtype.Text) ([]FindLoansByTeamIDRow, error) {
+	rows, err := q.db.Query(ctx, findLoansByTeamID, teamID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []FindLoansByTeamIDRow
+	for rows.Next() {
+		var i FindLoansByTeamIDRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.ToolkitID,
+			&i.KitName,
+			&i.CourseID,
+			&i.CourseName,
+			&i.TeamID,
+			&i.SubmitterID,
+			&i.Date,
+			&i.SessionNumber,
+			&i.Status,
+			&i.Note,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const findToolkitsWithInstruments = `-- name: FindToolkitsWithInstruments :many
 SELECT
     ti.toolkit_id,
@@ -127,6 +305,34 @@ func (q *Queries) FindToolkitsWithInstruments(ctx context.Context) ([]FindToolki
 	return items, nil
 }
 
+const insertLoan = `-- name: InsertLoan :exec
+INSERT INTO loans (id, toolkit_id, team_id, submitter_id, date, session_number, status)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+`
+
+type InsertLoanParams struct {
+	ID            string
+	ToolkitID     pgtype.Int2
+	TeamID        pgtype.Text
+	SubmitterID   string
+	Date          pgtype.Date
+	SessionNumber pgtype.Int2
+	Status        NullLoanStatus
+}
+
+func (q *Queries) InsertLoan(ctx context.Context, arg InsertLoanParams) error {
+	_, err := q.db.Exec(ctx, insertLoan,
+		arg.ID,
+		arg.ToolkitID,
+		arg.TeamID,
+		arg.SubmitterID,
+		arg.Date,
+		arg.SessionNumber,
+		arg.Status,
+	)
+	return err
+}
+
 const insertToolkit = `-- name: InsertToolkit :one
 INSERT INTO toolkits (kit_name, total_count)
 VALUES ($1, $2)
@@ -157,6 +363,44 @@ type InsertToolkitInstrumentParams struct {
 
 func (q *Queries) InsertToolkitInstrument(ctx context.Context, arg InsertToolkitInstrumentParams) error {
 	_, err := q.db.Exec(ctx, insertToolkitInstrument, arg.ToolkitID, arg.InstrumentID)
+	return err
+}
+
+const updateLoanNote = `-- name: UpdateLoanNote :exec
+UPDATE loans
+SET
+    note = $1,
+    updated_at = $2
+WHERE id = $3
+`
+
+type UpdateLoanNoteParams struct {
+	Note      pgtype.Text
+	UpdatedAt pgtype.Timestamp
+	ID        string
+}
+
+func (q *Queries) UpdateLoanNote(ctx context.Context, arg UpdateLoanNoteParams) error {
+	_, err := q.db.Exec(ctx, updateLoanNote, arg.Note, arg.UpdatedAt, arg.ID)
+	return err
+}
+
+const updateLoanStatus = `-- name: UpdateLoanStatus :exec
+UPDATE loans
+SET
+    status = $1,
+    updated_at = $2
+WHERE id = $3
+`
+
+type UpdateLoanStatusParams struct {
+	Status    NullLoanStatus
+	UpdatedAt pgtype.Timestamp
+	ID        string
+}
+
+func (q *Queries) UpdateLoanStatus(ctx context.Context, arg UpdateLoanStatusParams) error {
+	_, err := q.db.Exec(ctx, updateLoanStatus, arg.Status, arg.UpdatedAt, arg.ID)
 	return err
 }
 

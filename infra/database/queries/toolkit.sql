@@ -42,3 +42,59 @@ FROM toolkit_instruments ti
 INNER JOIN toolkits t ON ti.toolkit_id = t.id
 INNER JOIN instruments i ON ti.instrument_id = i.id
 ORDER BY t.kit_name, t.id;
+
+-- name: InsertLoan :exec
+INSERT INTO loans (id, toolkit_id, team_id, submitter_id, date, session_number, status)
+VALUES ($1, $2, $3, $4, $5, $6, $7);
+
+-- name: UpdateLoanNote :exec
+UPDATE loans
+SET
+    note = $1,
+    updated_at = $2
+WHERE id = $3;
+
+-- name: UpdateLoanStatus :exec
+UPDATE loans
+SET
+    status = $1,
+    updated_at = $2
+WHERE id = $3;
+
+-- name: FindLoansByTeamID :many
+SELECT
+    l.id, l.toolkit_id, t.kit_name,
+    t.course_id, c.name AS course_name,
+    l.team_id, l.submitter_id,
+    l.date, l.session_number, l.status, l.note,
+    l.created_at, l.updated_at
+FROM loans l
+LEFT JOIN toolkits t ON t.id = l.toolkit_id
+LEFT JOIN repl_courses c ON c.id = t.course_id
+WHERE l.team_id = $1
+ORDER BY l.date, l.session_number;
+
+-- name: FindLoansByDate :many
+SELECT
+    l.id, l.toolkit_id, t.kit_name,
+    t.course_id, c.name AS course_name,
+    l.team_id, l.submitter_id,
+    l.date, l.session_number, l.status, l.note,
+    l.created_at, l.updated_at
+FROM loans l
+LEFT JOIN toolkits t ON t.id = l.toolkit_id
+LEFT JOIN repl_courses c ON c.id = t.course_id
+WHERE l.date = $1
+ORDER BY l.session_number;
+
+-- name: FindLoanByID :one
+SELECT
+    l.id, l.toolkit_id, t.kit_name,
+    t.course_id, c.name AS course_name,
+    l.team_id, l.submitter_id,
+    l.date, l.session_number, l.status, l.note,
+    l.created_at, l.updated_at
+FROM loans l
+LEFT JOIN toolkits t ON t.id = l.toolkit_id
+LEFT JOIN repl_courses c ON c.id = t.course_id
+WHERE l.id = $1;

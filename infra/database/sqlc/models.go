@@ -5,8 +5,56 @@
 package sqlc
 
 import (
+	"database/sql/driver"
+	"fmt"
+
 	"github.com/jackc/pgx/v5/pgtype"
 )
+
+type LoanStatus string
+
+const (
+	LoanStatusUPCOMING  LoanStatus = "UPCOMING"
+	LoanStatusONGOING   LoanStatus = "ONGOING"
+	LoanStatusDONE      LoanStatus = "DONE"
+	LoanStatusCANCELLED LoanStatus = "CANCELLED"
+	LoanStatusEXPIRED   LoanStatus = "EXPIRED"
+)
+
+func (e *LoanStatus) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = LoanStatus(s)
+	case string:
+		*e = LoanStatus(s)
+	default:
+		return fmt.Errorf("unsupported scan type for LoanStatus: %T", src)
+	}
+	return nil
+}
+
+type NullLoanStatus struct {
+	LoanStatus LoanStatus
+	Valid      bool // Valid is true if LoanStatus is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullLoanStatus) Scan(value interface{}) error {
+	if value == nil {
+		ns.LoanStatus, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.LoanStatus.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullLoanStatus) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.LoanStatus), nil
+}
 
 type Instrument struct {
 	ID        int16
@@ -14,6 +62,19 @@ type Instrument struct {
 	CreatedAt pgtype.Timestamp
 	UpdatedAt pgtype.Timestamp
 	Picture   pgtype.Text
+}
+
+type Loan struct {
+	ID            string
+	ToolkitID     pgtype.Int2
+	TeamID        pgtype.Text
+	SubmitterID   string
+	Date          pgtype.Date
+	SessionNumber pgtype.Int2
+	Status        NullLoanStatus
+	Note          pgtype.Text
+	CreatedAt     pgtype.Timestamp
+	UpdatedAt     pgtype.Timestamp
 }
 
 type ReplCourse struct {
