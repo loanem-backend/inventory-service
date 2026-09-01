@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"time"
 
 	"github.com/loanem-backend/inventory-service/internal/entity"
 	"github.com/loanem-backend/inventory-service/internal/repository"
@@ -11,7 +12,9 @@ import (
 )
 
 type LoanService interface {
-	CreateLoan(ctx context.Context, l *entity.Loan) (string, error)
+	Create(ctx context.Context, l *entity.Loan) (string, error)
+
+	GetByDate(ctx context.Context, date time.Time) ([]*entity.Loan, error)
 }
 
 type loanService struct {
@@ -24,7 +27,7 @@ func NewLoanService(lr repository.LoanRepository) LoanService {
 	}
 }
 
-func (s *loanService) CreateLoan(ctx context.Context, l *entity.Loan) (string, error) {
+func (s *loanService) Create(ctx context.Context, l *entity.Loan) (string, error) {
 	l.ID = ulid.Make()
 	l.Status = entity.LoanStatusUpcoming
 
@@ -33,4 +36,13 @@ func (s *loanService) CreateLoan(ctx context.Context, l *entity.Loan) (string, e
 	}
 
 	return l.ID.String(), nil
+}
+
+func (s *loanService) GetByDate(ctx context.Context, date time.Time) ([]*entity.Loan, error) {
+	loans, err := s.loanRepo.FindByDate(ctx, date)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return loans, nil
 }
