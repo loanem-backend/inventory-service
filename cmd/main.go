@@ -32,9 +32,9 @@ func main() {
 
 	storageClient := config.InitStorageClient()
 
-	is, ts, cs := service.Initialize(db, storageClient)
+	is, ts, ls, cs := service.Initialize(db, storageClient)
 
-	server.Start(s, is, ts)
+	server.Start(s, is, ts, ls)
 
 	if err := consumer.Start(ctx, amqpCh, cs); err != nil {
 		log.Fatalf("failed starting service: %v\n", err)

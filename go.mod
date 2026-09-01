@@ -11,13 +11,13 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/loanem-backend/api-gateway v0.0.0-20260608154222-4f8632915e48
 	github.com/loanem-backend/course-service v0.0.0-20260604083344-46ed4fd1a9e8
-	github.com/loanem-backend/protos v0.0.0-20260824065009-1e15d4566736
+	github.com/loanem-backend/protos v0.0.0-20260901032503-618730d09503
 	github.com/oklog/ulid/v2 v2.1.2
 	github.com/rabbitmq/amqp091-go v1.11.0
 	github.com/stretchr/testify v1.11.1
 	go.uber.org/mock v0.6.0
-	google.golang.org/grpc v1.81.1
-	google.golang.org/protobuf v1.36.11
+	google.golang.org/grpc v1.82.1
+	google.golang.org/protobuf v1.36.12
 )
 
 require (
@@ -42,10 +42,11 @@ require (
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	golang.org/x/net v0.51.0 // indirect
-	golang.org/x/sync v0.20.0 // indirect
-	golang.org/x/sys v0.42.0 // indirect
-	golang.org/x/text v0.34.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260226221140-a57be14db171 // indirect
+	golang.org/x/net v0.56.0 // indirect
+	golang.org/x/sync v0.22.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/text v0.40.0 // indirect
+	google.golang.org/genproto v0.0.0-20260831171406-18b4a7587f8a // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260825221802-da73d73af1c5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

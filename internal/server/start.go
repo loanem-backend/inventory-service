@@ -6,7 +6,8 @@ import (
 	"google.golang.org/grpc"
 )
 
-func Start(s *grpc.Server, is service.InstrumentService, ts service.ToolkitService) {
+func Start(s *grpc.Server, is service.InstrumentService, ts service.ToolkitService, ls service.LoanService) {
 	pbinventory.RegisterInstrumentServiceServer(s, NewInstrumentServer(is))
 	pbinventory.RegisterToolkitServiceServer(s, NewToolkitServer(ts))
+	pbinventory.RegisterLoanServiceServer(s, NewLoanServer(ls))
 }
