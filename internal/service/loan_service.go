@@ -14,6 +14,7 @@ import (
 type LoanService interface {
 	Create(ctx context.Context, l *entity.Loan) (string, error)
 
+	GetByID(ctx context.Context, loanID ulid.ULID) (*entity.Loan, error)
 	GetByDate(ctx context.Context, date time.Time) ([]*entity.Loan, error)
 }
 
@@ -45,4 +46,13 @@ func (s *loanService) GetByDate(ctx context.Context, date time.Time) ([]*entity.
 	}
 
 	return loans, nil
+}
+
+func (s *loanService) GetByID(ctx context.Context, loanID ulid.ULID) (*entity.Loan, error) {
+	loan, err := s.loanRepo.FindByID(ctx, loanID.String())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return loan, nil
 }

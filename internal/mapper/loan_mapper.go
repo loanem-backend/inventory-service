@@ -5,6 +5,7 @@ import (
 
 	"github.com/loanem-backend/inventory-service/internal/entity"
 	pbinventory "github.com/loanem-backend/protos/pb/proto/services/inventory/v1"
+	"github.com/oklog/ulid/v2"
 	"google.golang.org/genproto/googleapis/type/date"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -97,4 +98,13 @@ func LoansToGetLoansByDateResponse(loans []*entity.Loan) *pbinventory.GetLoansBy
 	return &pbinventory.GetLoansByDateResponse{
 		Loans: pbLoans,
 	}
+}
+
+func GetLoanByIDRequestToLoanID(req *pbinventory.GetLoanByIDRequest) *ulid.ULID {
+	id, err := ulid.Parse(req.GetId())
+	if err != nil {
+		return nil
+	}
+
+	return &id
 }

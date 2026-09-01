@@ -15,6 +15,7 @@ import (
 type LoanRepository interface {
 	Insert(ctx context.Context, l *entity.Loan) error
 
+	FindByID(ctx context.Context, lID string) (*entity.Loan, error)
 	FindByDate(ctx context.Context, date time.Time) ([]*entity.Loan, error)
 }
 
@@ -28,8 +29,8 @@ func NewLoanRepository(q *sqlc.Queries) LoanRepository {
 	}
 }
 
-func (s *loanRepository) Insert(ctx context.Context, l *entity.Loan) error {
-	if err := s.db.InsertLoan(ctx, sqlc.InsertLoanParams{
+func (r *loanRepository) Insert(ctx context.Context, l *entity.Loan) error {
+	if err := r.db.InsertLoan(ctx, sqlc.InsertLoanParams{
 		ID:            l.ID.String(),
 		ToolkitID:     pgtype.Int2{Int16: int16(l.Toolkit.ID), Valid: true},
 		TeamID:        pgtype.Text{String: l.Team.ID, Valid: l.Team.ID != ""},
@@ -87,4 +88,13 @@ func toLoan(row sqlc.FindLoanByIDRow) *entity.Loan {
 		CreatedAt:     row.CreatedAt.Time,
 		UpdatedAt:     row.UpdatedAt.Time,
 	}
+}
+
+func (r *loanRepository) FindByID(ctx context.Context, lID string) (*entity.Loan, error) {
+	row, err := r.db.FindLoanByID(ctx, lID)
+	if err != nil {
+		return nil, err
+	}
+
+	return toLoan(row), nil
 }

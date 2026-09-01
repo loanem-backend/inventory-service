@@ -42,3 +42,19 @@ func (s *LoanServer) GetLoansByDate(ctx context.Context, req *pbinventory.GetLoa
 
 	return mapper.LoansToGetLoansByDateResponse(loansData), nil
 }
+
+func (s *LoanServer) GetLoanByID(ctx context.Context, req *pbinventory.GetLoanByIDRequest) (*pbinventory.GetLoanByIDResponse, error) {
+	reqID := mapper.GetLoanByIDRequestToLoanID(req)
+	if reqID == nil {
+		return nil, errors.New("invalid argument")
+	}
+
+	loanData, err := s.loanServ.GetByID(ctx, *reqID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pbinventory.GetLoanByIDResponse{
+		Loan: mapper.LoanToPBLoan(loanData),
+	}, nil
+}
